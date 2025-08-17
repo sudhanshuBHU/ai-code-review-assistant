@@ -43,7 +43,6 @@ export async function POST(req: NextRequest) {
 
   // 2. Parse the verified payload
   const payload = JSON.parse(rawBody) as GitHubWebhookPayload;
-  console.log('payload', payload);
 
   // We only care about PRs being opened or updated
   if (payload.action === 'opened' || payload.action === 'synchronize') {

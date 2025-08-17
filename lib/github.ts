@@ -13,13 +13,15 @@ type InstallationOctokit = Awaited<ReturnType<App['getInstallationOctokit']>>;
 
 // Type for Octokit API with full REST methods
 interface FullOctokit {
-  pulls: {
-    listFiles: (params: { owner: string; repo: string; pull_number: number }) => Promise<{
-      data: PullRequestFile[];
-    }>;
-  };
-  issues: {
-    createComment: (params: { owner: string; repo: string; issue_number: number; body: string }) => Promise<void>;
+  rest: {
+    pulls: {
+      listFiles: (params: { owner: string; repo: string; pull_number: number }) => Promise<{
+        data: PullRequestFile[];
+      }>;
+    };
+    issues: {
+      createComment: (params: { owner: string; repo: string; issue_number: number; body: string }) => Promise<void>;
+    };
   };
 }
 
@@ -67,7 +69,7 @@ export async function getPullRequestFiles(
 ) {
   const octokit = await getAuthenticatedOctokit(installationId);
 
-  const { data: files } = await (octokit as unknown as FullOctokit).pulls.listFiles({
+  const { data: files } = await (octokit as unknown as FullOctokit).rest.pulls.listFiles({
     owner,
     repo,
     pull_number,
@@ -100,7 +102,7 @@ export async function postCommentToPullRequest(
   
   // A more advanced version might search for existing comments from the bot
   // and update it to prevent spamming the PR. For now, we'll create a new one.
-  await (octokit as unknown as FullOctokit).issues.createComment({
+  await (octokit as unknown as FullOctokit).rest.issues.createComment({
     owner,
     repo,
     issue_number,
