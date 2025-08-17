@@ -1,7 +1,7 @@
 // app/actions/rules.ts
 'use server';
 
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { authOptions } from "@/lib/auth";
 import clientPromise from "@/lib/db";
 import { getServerSession } from "next-auth";
 import { revalidatePath } from "next/cache";
