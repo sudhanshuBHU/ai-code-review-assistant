@@ -12,7 +12,7 @@ const DEFAULT_RULES = [
 ];
 
 export async function analyzeCode(code: string, customRules: string[] = []) {
-  const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
+  const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
 
   const rules = [...DEFAULT_RULES, ...customRules].join('\n- ');
 
