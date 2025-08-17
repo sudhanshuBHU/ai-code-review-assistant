@@ -1,7 +1,8 @@
 // app/api/webhooks/github/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import { analyzeCode } from '@/lib/ai/gemini';
-import { getPullRequestFiles, postCommentToPullRequest, verifyWebhookSignature } from '@/lib/github';
+import {verifyWebhookSignature} from '@/lib/githubUtils';
+import { GitHubService } from '@/lib/githubService';
 
 // Type definitions for GitHub webhook payload and analysis results
 interface GitHubWebhookPayload {
@@ -37,7 +38,7 @@ export async function POST(req: NextRequest) {
   const rawBody = await req.text();
   
   // 1. CRITICAL: Verify the webhook signature
-  if (!await verifyWebhookSignature(req, rawBody)) {
+  if (!verifyWebhookSignature(req, rawBody)) {
     return NextResponse.json({ error: 'Unauthorized: Invalid signature' }, { status: 401 });
   }
 
@@ -57,7 +58,8 @@ export async function POST(req: NextRequest) {
 
     try {
       // 3. Get files from the pull request using the installationId
-      const files = await getPullRequestFiles(owner, repo, pull_number, installationId);
+      const githubService = await GitHubService.create(installationId);
+      const files = await githubService.getPullRequestFiles(owner, repo, pull_number);
 
       for (const file of files) {
         // We don't want to analyze huge diffs
@@ -79,7 +81,7 @@ export async function POST(req: NextRequest) {
           });
 
           // 6. Post the formatted comment to the PR
-          await postCommentToPullRequest(owner, repo, pull_number, commentBody, installationId);
+          await githubService.postCommentToPullRequest(owner, repo, pull_number, commentBody);
         }
       }
     } catch (error) {
