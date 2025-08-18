@@ -10,7 +10,7 @@ const UserNav = () => {
   // In a real app, you'd fetch user details here to show their name/avatar
   return (
     <div className="flex items-center space-x-4">
-      <p>User Menu</p>
+      {/* <p>User Menu</p> */}
       <Link href="/api/auth/signout?callbackUrl=/dashboard" className="text-sm font-medium text-gray-500 hover:text-gray-900">
         Sign Out
       </Link>
@@ -42,12 +42,12 @@ export default async function DashboardLayout({
                 AI Review Assistant
               </Link>
               <nav className="hidden md:flex md:ml-10 md:space-x-8">
-                <Link href="/dashboard" className="text-base font-medium text-gray-500 hover:text-gray-900">
+                {/* <Link href="/dashboard" className="text-base font-medium text-gray-500 hover:text-gray-900">
                   Dashboard
-                </Link>
-                <Link href="/settings" className="text-base font-medium text-gray-500 hover:text-gray-900">
+                </Link> */}
+                {/* <Link href="/settings" className="text-base font-medium text-gray-500 hover:text-gray-900">
                   Settings
-                </Link>
+                </Link> */}
               </nav>
             </div>
             <UserNav />

@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { analyzeCode } from '@/lib/ai/gemini';
 import {verifyWebhookSignature} from '@/lib/githubUtils';
 import { GitHubService } from '@/lib/githubService';
+import { pushReviewToDB } from '@/app/actions/pushReviewToDB';
 
 // Type definitions for GitHub webhook payload and analysis results
 interface GitHubWebhookPayload {
@@ -82,6 +83,13 @@ export async function POST(req: NextRequest) {
 
           // 6. Post the formatted comment to the PR
           await githubService.postCommentToPullRequest(owner, repo, pull_number, commentBody);
+
+          // 7. post to the db
+          await pushReviewToDB({
+            repo: repo,
+            owner: owner,
+            body: commentBody,
+          });
         }
       }
     } catch (error) {
@@ -92,47 +100,3 @@ export async function POST(req: NextRequest) {
   }
   return NextResponse.json({ status: 'ok' });
 }
-
-
-
-
-
-
-// import { NextRequest, NextResponse } from 'next/server';
-// import { analyzeCode } from '@/lib/ai/gemini';
-// import { getPullRequestFiles, postCommentToPullRequest } from '@/lib/github';
-
-// export async function POST(req: NextRequest) {
-//   const payload = await req.json();
-
-//   // IMPORTANT: In a real app, you MUST verify the webhook signature
-//   // to ensure the request is from GitHub.
-
-//   if (payload.action === 'opened' || payload.action === 'synchronize') {
-//     const repo = payload.repository.name;
-//     const owner = payload.repository.owner.login;
-//     const pull_number = payload.pull_request.number;
-
-//     // 1. Get files from the pull request
-//     const files = await getPullRequestFiles(owner, repo, pull_number);
-
-//     for (const file of files) {
-//       // 2. For each file, analyze the code
-//       const analysis = await analyzeCode(file.patch); // Analyze the changes (patch)
-
-//       if (analysis.issues && analysis.issues.length > 0) {
-//         // 3. Format the analysis into a comment
-//         let commentBody = `### AI Code Review for \`${file.filename}\`\n\n`;
-//         analysis.issues.forEach((issue: any) => {
-//           commentBody += `**Severity: ${issue.severity}**\n`;
-//           commentBody += `- **Line:** ${issue.line}\n`;
-//           commentBody += `- **Issue:** ${issue.description}\n\n`;
-//         });
-
-//         // 4. Post the comment to the PR
-//         await postCommentToPullRequest(owner, repo, pull_number, commentBody);
-//       }
-//     }
-//   }
-//   return NextResponse.json({ status: 'ok' });
-// }
