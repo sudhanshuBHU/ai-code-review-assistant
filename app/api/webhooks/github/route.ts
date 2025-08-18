@@ -4,6 +4,7 @@ import { analyzeCode } from '@/lib/ai/gemini';
 import {verifyWebhookSignature} from '@/lib/githubUtils';
 import { GitHubService } from '@/lib/githubService';
 import { pushReviewToDB } from '@/app/actions/pushReviewToDB';
+import { getUserRules } from '@/app/actions/rules';
 
 // Type definitions for GitHub webhook payload and analysis results
 interface GitHubWebhookPayload {
@@ -69,8 +70,11 @@ export async function POST(req: NextRequest) {
             continue;
         }
 
+        // 3.5. Get the user rules
+        const userRules = await getUserRules();
+
         // 4. For each file, analyze the code
-        const analysis = await analyzeCode(file.patch) as CodeAnalysisResult; // Analyze the changes (patch)
+        const analysis = await analyzeCode(file.patch, userRules) as CodeAnalysisResult; // Analyze the changes (patch)
 
         if (analysis.issues && analysis.issues.length > 0) {
           // 5. Format the analysis into a comment
