@@ -1,21 +1,18 @@
 // app/actions/rules.ts
 'use server';
 
-import { authOptions } from "@/lib/auth";
 import clientPromise from "@/lib/db";
-import { getServerSession } from "next-auth";
 import { revalidatePath } from "next/cache";
 import { ObjectId } from "mongodb";
 
 export async function getUserRules() {
-  const session = await getServerSession(authOptions);
-  if (!session?.user?.id) throw new Error("Unauthorized");
+  const userId = process.env.USER_ID_DEFAULT;
 
   const client = await clientPromise;
   const db = client.db(process.env.DATABASE_NAME);
   let ruleSet;
   try {
-    ruleSet = await db.collection('ruleSets').findOne({ userId: new ObjectId(session.user.id) });
+    ruleSet = await db.collection('ruleSets').findOne({ userId: new ObjectId(userId) });
   } catch (error) {
     console.error("Error fetching user rules:", error);
     throw new Error("Failed to fetch user rules.");
@@ -25,8 +22,8 @@ export async function getUserRules() {
 }
 
 export async function saveUserRules(rules: string[]) {
-  const session = await getServerSession(authOptions);
-  if (!session?.user?.id) throw new Error("Unauthorized");
+
+  const userId = process.env.USER_ID_DEFAULT;
 
   const client = await clientPromise;
   const db = client.db(process.env.DATABASE_NAME);
@@ -37,8 +34,8 @@ export async function saveUserRules(rules: string[]) {
 
   try {
     await db.collection('ruleSets').updateOne(
-      { userId: new ObjectId(session.user.id) },
-      { $set: { userId: new ObjectId(session.user.id), rules: sanitizedRules } },
+      { userId: new ObjectId(userId) },
+      { $set: { userId: new ObjectId(userId), rules: sanitizedRules } },
       { upsert: true } // Creates the document if it doesn't exist
     );
 
