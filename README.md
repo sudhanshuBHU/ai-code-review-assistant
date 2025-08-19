@@ -2,27 +2,29 @@
 
 [![Build](https://img.shields.io/badge/build-passing-brightgreen)](#) [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](#) [![Next.js](https://img.shields.io/badge/Next.js-14-blue?logo=next.js)](#) [![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?logo=typescript)](#)
 
-A web-based application that uses AI to automatically review code submissions, identify potential issues, and provide feedback to developers, streamlining the code review process. It integrates directly with your GitHub workflow to catch common errors, enforce coding standards, and free up senior engineers to focus on higher-level design and logic.
+A web-based application that uses AI to automatically review code submissions, identify potential issues, and provide feedback to developers, streamlining the code review process. 
 
-[Live Demo](#)
+This tool integrates directly with your GitHub workflow, acting as a tireless assistant that catches common errors, enforces coding standards, and frees up senior engineers to focus on high-level architectural and logic-based issues.
+
+[Live Demo](https://ai-code-review-assistant-zeta.vercel.app/)
 
 ## Key Features
 
-- **Secure GitHub Authentication**: Log in securely using GitHub via NextAuth.js.
-- **Automated Pull Request Reviews**: Scans new PRs and posts review comments directly on GitHub.
-- **AI-Powered Analysis**: Uses Google Gemini to analyze style, complexity, potential bugs, and best practices.
-- **Dynamic Rule Customization**: Create, modify, and manage coding rule sets from the admin dashboard.
-- **Admin Analytics Dashboard**: See total PRs reviewed and the five most recent PRs analyzed.
-- **CI/CD Integration**: GitHub App + webhooks for seamless, event-driven automation.
+- **Secure GitHub Authentication**: Admins can log in directly and securely using their GitHub account, managed by NextAuth.js.
+- **Automated Pull Request Reviews**: Automatically scans new pull requests and posts review comments directly on GitHub, providing instant feedback.
+- **AI-Powered Analysis**: Leverages the Google Gemini API to analyze code for style, complexity, potential bugs, and adherence to best practices.
+- **Dynamic Rule Customization**: From the admin dashboard, you can easily create, modify, and manage coding rule sets. These rules are instantly applied to all future reviews according to your team's needs.
+- **Admin Analytics Dashboard**: Provides a clear overview of the bot's activity, including a real-time count of total pull requests reviewed and a detailed list of the five most recent PRs analyzed.
+- **CI/CD Integration**: Uses a GitHub App and webhooks for seamless, event-driven integration with the development lifecycle.
 
 ## Tech Stack
 
 | **Category** | **Technology** |
 | --- | --- |
 | Framework | Next.js (App Router) |
-| Language | TypeScript |
+| Language | TypeScript / JavaScript |
 | Styling | Tailwind CSS |
-| UI | shadcn/ui |
+| UI | Shadcn/ui |
 | Database | MongoDB (MongoDB Atlas) |
 | Auth | NextAuth.js |
 | AI/ML | Google Gemini API |

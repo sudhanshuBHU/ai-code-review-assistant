@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 // import { Badge } from "@/components/ui/badge";
 import SettingsPage from '@/components/updateRules';
+import { MarkdownRenderer } from '@/components/markdown';
 
 
 interface Irepos{
@@ -81,32 +82,22 @@ export default function DashboardPage() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Recent Issues</CardTitle>
+          <CardTitle className='text-red-500 text-xl'>Recent Issues</CardTitle>
         </CardHeader>
         <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Repository</TableHead>
-                <TableHead>Owner</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {data.repos.map((issue, id) => (
-                <div key={id}>
-                  <TableRow>
-                    <TableCell className="font-medium">{issue.repo}</TableCell>
-                    <TableCell>{issue.owner}</TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell colSpan={2} className="whitespace-pre-line">
-                      {issue.body}
-                    </TableCell>
-                  </TableRow>
-                </div>
-              ))}
-            </TableBody>
-          </Table>
+          <div className="grid gap-4">
+            {data.repos.map((issue, id) => (
+              <Card key={id}>
+                <CardHeader className='text-blue-400'>
+                  <CardTitle className="text-lg">{id+1}.&nbsp;{ issue.repo}</CardTitle>
+                  <p className="text-sm text-muted-foreground">Owner: {issue.owner}</p>
+                </CardHeader>
+                <CardContent>
+                  <MarkdownRenderer content={issue.body} />
+                </CardContent>
+              </Card>
+            ))}
+          </div>
         </CardContent>
       </Card>
     </div>
