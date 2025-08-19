@@ -3,7 +3,6 @@
 
 import clientPromise from "@/lib/db";
 import { revalidatePath } from "next/cache";
-import { ObjectId } from "mongodb";
 
 export async function getUserRules() {
   const userId = process.env.USER_ID_DEFAULT;
@@ -12,7 +11,7 @@ export async function getUserRules() {
   const db = client.db(process.env.DATABASE_NAME);
   let ruleSet;
   try {
-    ruleSet = await db.collection('ruleSets').findOne({ userId: new ObjectId(userId) });
+    ruleSet = await db.collection('ruleSets').findOne({ userId: userId });
   } catch (error) {
     console.error("Error fetching user rules:", error);
     throw new Error("Failed to fetch user rules.");
@@ -34,8 +33,8 @@ export async function saveUserRules(rules: string[]) {
 
   try {
     await db.collection('ruleSets').updateOne(
-      { userId: new ObjectId(userId) },
-      { $set: { userId: new ObjectId(userId), rules: sanitizedRules } },
+      { userId: userId },
+      { $set: { userId: userId, rules: sanitizedRules } },
       { upsert: true } // Creates the document if it doesn't exist
     );
 
